@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quotes Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .container {
+            width: 80%;
+            margin: 30px auto;
+        }
+
+        .quote-card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .quote-text {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .quote-number {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Quotes Web Scraper Dashboard</h1>
+</header>
+
+<div class="container">
+
+    <a href="/" class="btn">← Back to Home</a>
+
+    <h2>Scraped Quotes</h2>
+
+    {% if quotes %}
+        {% for quote in quotes %}
+            <div class="quote-card">
+                <div class="quote-number">Quote {{ loop.index }}</div>
+                <div class="quote-text">{{ quote }}</div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No quotes found.</p>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

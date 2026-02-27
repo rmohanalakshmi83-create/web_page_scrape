@@ -1,5 +1,6 @@
-from flask import Flask
-from utils import scrape_quotes
+from flask import Flask, render_template
+import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -12,11 +13,16 @@ def home():
 
 @app.route("/run")
 def run_scraper():
-    try:
-        message = scrape_quotes()
-        return message
-    except Exception as e:
-        return f"Error occurred: {e}"
+    url = "http://quotes.toscrape.com"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    quotes = []
+
+    for quote in soup.find_all("span", class_="text"):
+        quotes.append(quote.text)
+
+    return render_template("quotes.html", quotes=quotes)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    app.run(debug=True)
