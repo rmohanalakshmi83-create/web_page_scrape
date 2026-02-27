@@ -13,16 +13,18 @@ def home():
 
 @app.route("/run")
 def run_scraper():
-    url = "http://quotes.toscrape.com"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
+    import requests
+    from bs4 import BeautifulSoup
 
+    base_url = "http://quotes.toscrape.com/page/{}/"
     quotes = []
 
-    for quote in soup.find_all("span", class_="text"):
-        quotes.append(quote.text)
+    for page in range(1, 6):  # Change 6 to scrape more pages
+        url = base_url.format(page)
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        for quote in soup.find_all("span", class_="text"):
+            quotes.append(quote.text)
 
     return render_template("quotes.html", quotes=quotes)
-
-if __name__ == "__main__":
-    app.run(debug=True)
