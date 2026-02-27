@@ -1,6 +1,6 @@
 from flask import Flask, render_template
-import requests
-from bs4 import BeautifulSoup
+from utils import scrape_quotes
+import csv
 
 app = Flask(__name__)
 
@@ -13,22 +13,16 @@ def home():
 
 @app.route("/run")
 def run_scraper():
-    base_url = "http://quotes.toscrape.com"
+    # Run scraper (saves CSV)
+    scrape_quotes()
+
+    # Read CSV to display data
     quotes = []
-    page_url = "/page/1/"
-
-    while page_url:
-        response = requests.get(base_url + page_url)
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        for quote in soup.find_all("span", class_="text"):
-            quotes.append(quote.text)
-
-        next_btn = soup.find("li", class_="next")
-        if next_btn:
-            page_url = next_btn.find("a")["href"]
-        else:
-            page_url = None
+    with open("quotes.csv", newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        next(reader)  # skip header
+        for row in reader:
+            quotes.append(row[0])  # only quote text
 
     return render_template("quotes.html", quotes=quotes)
 
